@@ -1,6 +1,6 @@
 # formant_extractor
 
-Extract formants using LPC
+This is a Flutter app that extracts the formants using LPC with the order of 32. It uses the first 46.4 msec of a recording so you should already be speaking before pressing "record." 
 
 ## Getting Started
 
