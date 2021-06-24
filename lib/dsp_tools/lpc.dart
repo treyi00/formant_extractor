@@ -1,4 +1,4 @@
-import 'package:flutter/cupertino.dart';
+import 'package:meta/meta.dart';
 import 'package:data/vector.dart';
 import 'package:data/matrix.dart';
 import 'package:data/type.dart';
@@ -6,7 +6,7 @@ import 'window.dart';
 
 //Example:
 //LPC lpc = LPC(signal, order);
-//lpc.getCoefficients;
+//lpc.coefficients;
 
 class LPC {
   LPC(@required this.signal, {@required this.order});

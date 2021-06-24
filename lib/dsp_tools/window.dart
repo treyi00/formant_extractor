@@ -56,7 +56,39 @@ class Window {
     }
   }
 
+  //pads the signal with a very small number that's close to zero but not quite
+  static Vector<double> epsilonPad(Vector<double> sig,
+      {int before = 0, int after = 0}) {
+    Vector<double> epsilonPadBefore =
+        epsilons(before); //[for (int i = 0; i < before; i += 1) 0.0];
+    Vector<double> epsilonPadAfter =
+        epsilons(after); //[for (int i = 0; i < after; i += 1) 0.0];
+
+    if (before == 0 && after == 0) {
+      return sig;
+    } else if (before != 0 && after == 0) {
+      return Vector.concat(DataType.float64, [epsilons(before), sig]);
+    } else if (before == 0 && after != 0) {
+      return Vector.concat(DataType.float64, [sig, epsilons(after)]);
+    } else {
+      return Vector.concat(
+          DataType.float64, [epsilons(before), sig, epsilons(after)]);
+    }
+  }
+
   static Vector<double> zeroes(int n) {
     return Vector<double>.generate(DataType.float64, n, (i) => 0.0);
+  }
+
+  static Vector<double> epsilons(int n) {
+    return Vector<double>.generate(
+        DataType.float64, n, (i) => 4.94065645841247E-324);
+  }
+
+  static Vector<double> vectorize(List<double> signal) {
+    Vector<double> vectorizedSignal = Vector<double>.generate(
+        DataType.float64, signal.length, (i) => signal[i]);
+
+    return vectorizedSignal;
   }
 }

@@ -4,6 +4,7 @@ import 'package:data/vector.dart';
 import 'package:data/type.dart';
 import 'package:formant_extractor/audio_tools/audio.dart';
 import 'package:formant_extractor/dsp_tools/speech.dart';
+import 'package:formant_extractor/dsp_tools/window.dart';
 
 class FormantExtractorScreen extends StatefulWidget {
   @override
@@ -30,7 +31,11 @@ class _FormantExtractorScreenState extends State<FormantExtractorScreen> {
             children: <Widget>[
               Expanded(
                 flex: 5,
-                child: Text('$formants'),
+                child: Column(
+                  children: [
+                    Text('$formants'),
+                  ],
+                ),
               ),
               Expanded(
                 flex: 1,
@@ -49,9 +54,12 @@ class _FormantExtractorScreenState extends State<FormantExtractorScreen> {
                         break;
                       case true:
                         audio.stop();
-                        //Grabs the first 2048 audio samples
-                        List<double> newPCM = audio.getPCM().sublist(0, 2048);
+
+                        //Grabs the middle 1024 audio samples
+                        List<double> newPCM = audio.getMidPCM(1024);
+
                         pcmList = newPCM;
+
                         setState(() {
                           isRecording = false;
                           formantsReady = true;
@@ -66,8 +74,7 @@ class _FormantExtractorScreenState extends State<FormantExtractorScreen> {
                 child: MaterialButton(
                   child: Text(formantsReady ? 'Get Formants' : '...'),
                   onPressed: () {
-                    Vector<double> pcmVector = Vector<double>.generate(
-                        DataType.float64, pcmList.length, (i) => pcmList[i]);
+                    Vector<double> pcmVector = Window.vectorize(pcmList);
 
                     Speech speech = Speech(pcmVector, samplingRate: audio.Fs);
                     speech.init();

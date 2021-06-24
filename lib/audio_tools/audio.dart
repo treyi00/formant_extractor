@@ -1,5 +1,6 @@
 import 'package:audio_streamer/audio_streamer.dart';
 import 'package:flutter/services.dart';
+import 'package:meta/meta.dart';
 
 //Example:
 //Audio audio = Audio();
@@ -41,6 +42,14 @@ class Audio {
   //returns raw pressure wave values
   List<double> getPCM() {
     return _audio;
+  }
+
+  //returns middle raw pressure wave values
+  List<double> getMidPCM(@required int samples) {
+    int halfSamples = (samples / 2).round();
+    int mid = (_audio.length / 2).round();
+
+    return _audio.sublist(mid - halfSamples, mid + halfSamples);
   }
 
   void clear() {

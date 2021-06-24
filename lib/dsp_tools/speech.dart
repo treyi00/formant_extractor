@@ -3,6 +3,7 @@ import 'package:data/type.dart';
 import 'package:data/vector.dart';
 import 'package:data/polynomial.dart';
 import 'package:extended_math/extended_math.dart' as math;
+import 'package:formant_extractor/dsp_tools/lips.dart';
 import 'package:formant_extractor/dsp_tools/window.dart';
 import 'package:formant_extractor/dsp_tools/lpc.dart';
 import 'package:formant_extractor/dsp_tools/convert.dart';
@@ -25,6 +26,9 @@ class Speech {
   List<double> frqs;
   List<double> bandwidths;
 
+  double _lipCoeff;
+
+  //TODO: break this up into different formants and lip functions
   //analytical method to find formants
   void init() {
     Vector<double> sigHann = Window.hanningApply(signal);
@@ -60,9 +64,18 @@ class Speech {
         _formantList.add(frqs[k]);
       }
     }
+
+    //Get Lip Coefficient
+
+    Lips lips = Lips(signal);
+    _lipCoeff = lips.coefficient;
   }
 
   List<double> get formants {
     return _formantList;
+  }
+
+  double get lipCoefficient {
+    return _lipCoeff;
   }
 }

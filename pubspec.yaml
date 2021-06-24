@@ -27,6 +27,7 @@ dependencies:
   data: ^0.7.1 #for vector and matrix operations
   audio_streamer: ^2.0.0 #to get PCM from phone microphone
   extended_math: ^0.0.29+1 #for trig, pi, and logarithms
+  list_ext: 0.2.0 #^1.0.2 #for the list method of replaceWhere; downgraded from ^1.0.2 to 0.2.0 to bypass version solving issues with extended_math dependencies
 
 dev_dependencies:
   flutter_test:
