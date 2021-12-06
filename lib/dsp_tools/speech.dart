@@ -20,11 +20,13 @@ class Speech {
   double samplingRate;
 
   List<double> _formantList = [];
-  List<Complex> roots;
-  LPC lpc;
-  Polynomial<double> polynom;
-  List<double> frqs;
-  List<double> bandwidths;
+  late List<Complex> _roots;
+  late LPC _lpc;
+  late Polynomial<double> _polynom;
+  late List<double> _frqs;
+  late Map<int, double> _idx2frqs;
+  late Map<double, int> _frqs2idx;
+  late List<double> _bandwidths;
 
   double _lipCoeff;
 
@@ -43,20 +45,27 @@ class Speech {
     roots = roots.where((element) => element.imaginary >= 0).toList();
 
     //Get angles of roots and convert to frequencies
-    frqs = roots
+    _frqs = _roots
         .map((element) =>
             math.atan2(element.imaginary, element.real) *
             (samplingRate / (2 * math.pi)))
         .toList();
-    frqs.sort();
+    //to keep track of which roots freq is associated after sorting
+    _idx2frqs = _frqs.asMap();
+    _frqs2idx = {
+      for (var i = 0; i < _frqs.length; i++)
+        _idx2frqs[i]!: _idx2frqs.keys.toList()[i]
+    };
+    _frqs.sort();
 
     //bandwidth is distance from origin
-    bandwidths = roots
-        .map((element) =>
+    //for each sorted freq, get the bandwidth of the associated root
+    _bandwidths = _frqs
+        .map((f) =>
             -1 /
             2 *
             (samplingRate / (2 * math.pi)) *
-            math.log(Convert.absComplex(element)))
+            math.log(Convert.absComplex(_roots[_frqs2idx[f]!])))
         .toList();
 
     for (int k = 0; k < frqs.length; k++) {
